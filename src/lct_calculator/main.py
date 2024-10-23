@@ -1,7 +1,7 @@
-from src.lct_calculator.interfaces.foundation_calculator_interface import FoundationCalculatorInterface
-from PySide6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication
 import sys
 import logging
+from interfaces.foundation_calculator_interface import FoundationCalculatorInterface
 
 # Configurando o logger
 logging.basicConfig(level=logging.INFO)
