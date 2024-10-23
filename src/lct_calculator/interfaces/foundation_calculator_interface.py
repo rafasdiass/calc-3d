@@ -1,7 +1,16 @@
 from PySide6.QtWidgets import QMainWindow, QPushButton, QLabel, QFileDialog, QComboBox, QVBoxLayout, QProgressBar, QMessageBox, QWidget, QFrame
 from PySide6.QtCore import Qt
 import logging
-from src.lct_calculator.calculators.foundation_calculator import FoundationCalculator
+from src.lct_calculator.calculators.sapata import Sapata
+from src.lct_calculator.calculators.bloco import Bloco
+from src.lct_calculator.calculators.tubulão import Tubulao  # Tubulão sem acento
+from src.lct_calculator.calculators.estaca import Estaca
+from src.lct_calculator.calculators.radier import Radier
+from src.lct_calculator.calculators.barrete import Barrete
+from src.lct_calculator.calculators.sapata_corrida import SapataCorrida
+from src.lct_calculator.calculators.estaca_helice_continua import EstacaHeliceContinua
+from src.lct_calculator.calculators.tubulão_ceu_aberto import TubulaoCeuAberto  # Tubulão sem acento no arquivo
+from src.lct_calculator.calculators.tubulão_ar_comprimido import TubulaoArComprimido  # Tubulão sem acento no arquivo
 from src.lct_calculator.helpers.file_helper import FileHelper
 
 # Configuração do logger
@@ -139,9 +148,32 @@ class FoundationCalculatorInterface(QMainWindow):
         if self.arquivo_selecionado and self.tipo_fundacao_selecionada:
             self.progress_bar.setValue(20)
             try:
-                # Carrega dados do arquivo e executa o cálculo
+                # Carrega dados do arquivo
                 dados = FileHelper.carregar_dados(self.arquivo_selecionado)
-                resultado = FoundationCalculator.calcular(self.tipo_fundacao_selecionada, dados)
+
+                # Mapeamento dos tipos de fundação para suas respectivas classes
+                fundacoes = {
+                    'Sapata': Sapata,
+                    'Bloco': Bloco,
+                    'Tubulão': Tubulao,
+                    'Estaca': Estaca,
+                    'Radier': Radier,
+                    'Barrete': Barrete,
+                    'Sapata Corrida': SapataCorrida,
+                    'Estaca Hélice Contínua': EstacaHeliceContinua,
+                    'Tubulão Céu Aberto': TubulaoCeuAberto,
+                    'Tubulão Sob Ar Comprimido': TubulaoArComprimido
+                }
+
+                # Instancia a classe correspondente ao tipo de fundação selecionado
+                fundacao_classe = fundacoes.get(self.tipo_fundacao_selecionada)
+                if not fundacao_classe:
+                    raise ValueError(f"Tipo de fundação '{self.tipo_fundacao_selecionada}' não suportado.")
+                
+                # Exemplo de inicialização da fundação, dependendo dos parâmetros específicos
+                fundacao = fundacao_classe(**dados)
+                resultado = fundacao.calcular_capacidade_carga()
+
                 self.progress_bar.setValue(100)
                 self.label_resultado.setText(f"Cálculo concluído com sucesso! Resultado: {resultado}")
                 logging.info("Cálculo concluído com sucesso!")
@@ -152,4 +184,3 @@ class FoundationCalculatorInterface(QMainWindow):
         else:
             QMessageBox.warning(self, "Erro", "Nenhum arquivo ou tipo de fundação foi selecionado.")
             logging.warning("Tentativa de cálculo sem seleção de arquivo ou tipo de fundação.")
-
