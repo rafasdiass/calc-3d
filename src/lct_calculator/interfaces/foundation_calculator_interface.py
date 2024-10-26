@@ -234,7 +234,7 @@ class FoundationCalculatorInterface(QMainWindow):
             (0, 4), (1, 5), (2, 6), (3, 7)   # Conectando faces superior e inferior
         ]
 
-        # Cor do cubo
+        # Cor do  cubo
         cube_color = Qt.GlobalColor.blue
 
         # Criar cada aresta usando cilindros
