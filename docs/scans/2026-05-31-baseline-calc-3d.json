@@ -1,0 +1,333 @@
+{
+  "scan_id": "baseline-2026-05-31",
+  "branch": "main",
+  "generated_by": "hermes",
+  "generated_at": "2026-05-31",
+  "summary": {
+    "total_python_files": 31,
+    "total_loc": 2688,
+    "external_imports": [
+      "PyQt6",
+      "fpdf",
+      "ifcopenshell",
+      "sqlite3",
+      "logging",
+      "math",
+      "os",
+      "sys",
+      "json",
+      "csv",
+      "argparse",
+      "pathlib",
+      "typing"
+    ]
+  },
+  "tree": [
+    "docs",
+    "docs/adr",
+    "docs/dispatches",
+    "docs/scans",
+    "docs/planning",
+    "docs/debates",
+    "docs/private",
+    "src",
+    "src/lct_calculator",
+    "src/lct_calculator/models",
+    "src/lct_calculator/calculators",
+    "src/lct_calculator/helpers",
+    "src/lct_calculator/services",
+    "src/lct_calculator/interfaces",
+    "tests"
+  ],
+  "files": [
+    {
+      "path": "src/lct_calculator/__init__.py",
+      "loc": 0,
+      "imports": [],
+      "classification": "keep",
+      "rationale": "package marker vazio, neutro",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/main.py",
+      "loc": 22,
+      "imports": ["PyQt6.QtWidgets", "sys", "logging", "interfaces.foundation_calculator_interface"],
+      "classification": "delete",
+      "rationale": "entrypoint QApplication, sera substituido por FastAPI (GAPS A)",
+      "depends_on_gui": true
+    },
+    {
+      "path": "src/lct_calculator/database.py",
+      "loc": 104,
+      "imports": ["sqlite3", "logging", "pathlib"],
+      "classification": "refactor",
+      "rationale": "schema legado SQLite/JSON-stringify, migrar para Postgres tipado (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/models/__init__.py",
+      "loc": 0,
+      "imports": [],
+      "classification": "keep",
+      "rationale": "package marker vazio",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/models/foundation_data.py",
+      "loc": 42,
+      "imports": ["typing"],
+      "classification": "refactor",
+      "rationale": "vira core/domain/element.py como entidade rica (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/models/load_data.py",
+      "loc": 28,
+      "imports": ["typing"],
+      "classification": "refactor",
+      "rationale": "vira core/loads/case.py (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/models/report_data.py",
+      "loc": 28,
+      "imports": ["typing"],
+      "classification": "refactor",
+      "rationale": "vira core/report/output.py (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/__init__.py",
+      "loc": 16,
+      "imports": [".sapata", ".bloco", ".tubulão", ".estaca", ".radier", ".barrete", ".sapata_corrida", ".estaca_helice_continua", ".tubulão_ceu_aberto", ".tubulão_ar_comprimido"],
+      "classification": "refactor",
+      "rationale": "re-exports do pacote calculators, sera reorganizado em core/foundations",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/sapata.py",
+      "loc": 110,
+      "imports": ["typing", "math"],
+      "classification": "keep",
+      "rationale": "motor de calculo puro, vira core/foundations/footing.py (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/bloco.py",
+      "loc": 85,
+      "imports": ["typing", "math"],
+      "classification": "keep",
+      "rationale": "motor de calculo puro, vira core/foundations/pile_cap.py (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/estaca.py",
+      "loc": 112,
+      "imports": ["typing", "math"],
+      "classification": "keep",
+      "rationale": "motor de calculo puro, vira core/foundations/pile.py (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/radier.py",
+      "loc": 103,
+      "imports": ["typing", "math"],
+      "classification": "keep",
+      "rationale": "motor de calculo puro, vira core/foundations/raft.py (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/barrete.py",
+      "loc": 134,
+      "imports": ["typing", "math"],
+      "classification": "keep",
+      "rationale": "motor de calculo puro, vira core/foundations/barrette.py (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/sapata_corrida.py",
+      "loc": 119,
+      "imports": ["math", "typing"],
+      "classification": "keep",
+      "rationale": "motor de calculo puro, vira core/foundations/strip_footing.py (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/estaca_helice_continua.py",
+      "loc": 138,
+      "imports": ["math", "typing"],
+      "classification": "keep",
+      "rationale": "motor de calculo puro, vira core/foundations/cfa_pile.py (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/tubulão.py",
+      "loc": 108,
+      "imports": ["typing", "math"],
+      "classification": "keep",
+      "rationale": "motor de calculo puro, vira core/foundations/caisson.py; renomear (B-002)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/tubulão_ceu_aberto.py",
+      "loc": 145,
+      "imports": ["typing", "math"],
+      "classification": "keep",
+      "rationale": "motor de calculo puro, vira core/foundations/caisson_open.py; renomear (B-002)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/tubulão_ar_comprimido.py",
+      "loc": 156,
+      "imports": ["typing", "math"],
+      "classification": "keep",
+      "rationale": "motor de calculo puro, vira core/foundations/caisson_pneumatic.py; renomear (B-002)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/calculators/simple_calculator.py",
+      "loc": 169,
+      "imports": ["math", "typing"],
+      "classification": "delete",
+      "rationale": "calculadora financeira nao pertence ao produto (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/helpers/__init__.py",
+      "loc": 0,
+      "imports": [],
+      "classification": "keep",
+      "rationale": "package marker vazio",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/helpers/file_helper.py",
+      "loc": 155,
+      "imports": ["os", "json", "csv", "logging", "typing"],
+      "classification": "refactor",
+      "rationale": "zona cinza, utilidades de IO; reaproveitar como infra/io ou eliminar conforme refactor",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/services/__init__.py",
+      "loc": 0,
+      "imports": [],
+      "classification": "keep",
+      "rationale": "package marker vazio",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/services/calculation_service.py",
+      "loc": 74,
+      "imports": ["typing", "src.lct_calculator.calculators", "src.lct_calculator.models.foundation_data", "src.lct_calculator.models.load_data", "src.lct_calculator.models.report_data", "logging"],
+      "classification": "refactor",
+      "rationale": "vira apps/api/services/calculator.py orquestrado por Celery (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/services/sqlite_service.py",
+      "loc": 55,
+      "imports": ["sqlite3", "os"],
+      "classification": "delete",
+      "rationale": "persistencia insegura JSON-stringify, sera Postgres + SQLAlchemy (B-003)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/services/bim_integration.py",
+      "loc": 33,
+      "imports": ["sqlite3", ".sqlite_service", "logging"],
+      "classification": "refactor",
+      "rationale": "stub vazio, vira apps/api/services/bim_sync.py com webhook real (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/interfaces/__init__.py",
+      "loc": 13,
+      "imports": [".cli", ".foundation_calculator_interface", ".report_generator", ".tqs_data_importer"],
+      "classification": "delete",
+      "rationale": "re-exports da camada interfaces que sera dissolvida (GAPS A/B)",
+      "depends_on_gui": true
+    },
+    {
+      "path": "src/lct_calculator/interfaces/foundation_calculator_interface.py",
+      "loc": 251,
+      "imports": ["PyQt6.QtWidgets", "PyQt6.QtCore", "PyQt6.Qt3DExtras", "PyQt6.Qt3DCore", "PyQt6.QtGui", "logging", "ifcopenshell", "ifcopenshell.geom"],
+      "classification": "delete",
+      "rationale": "janela PyQt6 + Qt3D, descarte total (GAPS A)",
+      "depends_on_gui": true
+    },
+    {
+      "path": "src/lct_calculator/interfaces/visualizador_ifc.py",
+      "loc": 133,
+      "imports": ["ifcopenshell", "ifcopenshell.geom", "PyQt6.QtWidgets", "PyQt6.QtCore", "PyQt6.Qt3DExtras", "PyQt6.Qt3DCore", "PyQt6.QtGui", "logging"],
+      "classification": "delete",
+      "rationale": "viewer 3D IFC, descarte total (GAPS A)",
+      "depends_on_gui": true
+    },
+    {
+      "path": "src/lct_calculator/interfaces/cli.py",
+      "loc": 101,
+      "imports": ["logging", "argparse", "sys", "src.lct_calculator.calculators", "src.lct_calculator.database", "src.lct_calculator.interfaces.report_generator"],
+      "classification": "refactor",
+      "rationale": "vira apps/cli/main.py como ferramenta de dev/debug (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/interfaces/tqs_data_importer.py",
+      "loc": 132,
+      "imports": ["os", "csv", "json", "ifcopenshell", "typing", "logging"],
+      "classification": "refactor",
+      "rationale": "dividir em core/importers/csv_importer.py + core/importers/ifc_parser.py (GAPS B)",
+      "depends_on_gui": false
+    },
+    {
+      "path": "src/lct_calculator/interfaces/report_generator.py",
+      "loc": 122,
+      "imports": ["csv", "json", "fpdf", "typing", "logging"],
+      "classification": "refactor",
+      "rationale": "vira core/report/pdf_renderer.py mantendo logica (GAPS B)",
+      "depends_on_gui": false
+    }
+  ],
+  "dependencies": [
+    "asttokens==2.4.1",
+    "comm==0.2.2",
+    "decorator==5.1.1",
+    "executing==2.1.0",
+    "fpdf==1.7.2",
+    "ifcopenshell==0.8.0",
+    "ipydatawidgets==4.3.5",
+    "ipython==8.28.0",
+    "ipywidgets==8.1.5",
+    "isodate==0.7.2",
+    "jedi==0.19.1",
+    "jupyterlab_widgets==3.0.13",
+    "lark==1.2.2",
+    "matplotlib-inline==0.1.7",
+    "numpy==2.1.2",
+    "parso==0.8.4",
+    "pexpect==4.9.0",
+    "prompt_toolkit==3.0.48",
+    "ptyprocess==0.7.0",
+    "pure_eval==0.2.3",
+    "Pygments==2.18.0",
+    "PyQt6==6.7.1",
+    "PyQt6-3D==6.7.0",
+    "PyQt6-3D-Qt6==6.7.3",
+    "PyQt6-Qt6==6.7.3",
+    "PyQt6_sip==13.8.0",
+    "PySide6_Addons==6.8.0.1",
+    "PySide6_Essentials==6.8.0.1",
+    "python-dateutil==2.9.0.post0",
+    "pythreejs==2.4.2",
+    "shapely==2.0.6",
+    "shiboken6==6.8.0.1",
+    "six==1.16.0",
+    "stack-data==0.6.3",
+    "traitlets==5.14.3",
+    "traittypes==0.2.1",
+    "typing_extensions==4.12.2",
+    "wcwidth==0.2.13",
+    "widgetsnbextension==4.0.13"
+  ]
+}
