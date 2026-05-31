@@ -1,1 +1,36 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# venv
 venv/
+.venv/
+env/
+
+# env vars
+.env
+.env.*
+!.env.example
+
+# build
+dist/
+build/
+*.egg-info/
+
+# private (notas pessoais não-versionadas)
+docs/private/
+
+# Logs locais
+*.log
