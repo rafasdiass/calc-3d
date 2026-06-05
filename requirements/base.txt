@@ -1,0 +1,9 @@
+# requirements/base.txt — dependências comuns a todos os ambientes
+fastapi==0.111.0
+pydantic==2.7.1
+sqlalchemy==2.0.30
+alembic==1.13.1
+asyncpg==0.29.0        # driver async PostgreSQL (produção)
+aiosqlite==0.20.0      # driver async SQLite (testes unitários)
+uvicorn[standard]==0.29.0
+python-dotenv==1.0.1

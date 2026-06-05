@@ -1,0 +1,4 @@
+# requirements/prod.txt — dependências de produção (sem ferramentas dev)
+-r base.txt
+
+gunicorn==22.0.0       # process manager em produção (frente ao uvicorn)

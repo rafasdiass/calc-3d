@@ -28,9 +28,25 @@ env/
 dist/
 build/
 *.egg-info/
+*.egg
+
+# pytest / coverage
+.coverage
+htmlcov/
+coverage.xml
+
+# Docker volumes locais
+postgres_data/
+
+# SQLite legado (não deve existir mais, mas por via das dúvidas)
+*.db
+*.sqlite3
 
 # private (notas pessoais não-versionadas)
 docs/private/
 
 # Logs locais
 *.log
+
+# Alembic runtime
+src/lct_calculator/infra/db/migrations/versions/__pycache__/
