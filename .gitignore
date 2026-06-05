@@ -2,35 +2,48 @@
 .DS_Store
 **/.DS_Store
 
-# IDE
+# IDEs
 .idea/
 .vscode/
+*.swp
+*.swo
 
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
-.pytest_cache/
+*.egg-info/
+dist/
+build/
+.eggs/
 .mypy_cache/
 .ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
 
-# venv
+# Ambientes
 venv/
 .venv/
 env/
-
-# env vars
 .env
 .env.*
 !.env.example
+
+# Runtime
+*.db
+*.sqlite3
+
+# Logs locais
+*.log
 
 # build
 dist/
 build/
 *.egg-info/
 
-# private (notas pessoais não-versionadas)
+# Privado
 docs/private/
 
-# Logs locais
-*.log
+# Legacy (não importar)
+_legacy/
