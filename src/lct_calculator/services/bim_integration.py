@@ -1,33 +1,21 @@
-import sqlite3
-from .sqlite_service import connect_db
 import logging
 
-# Configuração do logger
-logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 def sincronizar_bim(fundacao_id: int) -> None:
     """
-    Simula uma sincronização com a plataforma BIM e atualiza o status da fundação no banco de dados.
+    Stub de sincronização BIM — SQLite removido na Sprint 0.
+    Será reimplementado com PostgreSQL na Sprint 1.
 
     :param fundacao_id: ID da fundação a ser sincronizada.
     """
-    conn = connect_db()
-    cursor = conn.cursor()
-
-    try:
-        # Simula sincronização com plataforma BIM
-        status = "Sincronizado"
-        
-        # Atualiza o status de sincronização no banco de dados
-        cursor.execute('''
-            INSERT INTO sincronizacao_bim (fundacao_id, status, sincronizado_em)
-            VALUES (?, ?, CURRENT_TIMESTAMP)
-        ''', (fundacao_id, status))
-
-        conn.commit()
-        logging.info(f"Fundação {fundacao_id} sincronizada com sucesso na plataforma BIM.")
-    except Exception as e:
-        logging.error(f"Erro ao sincronizar a fundação {fundacao_id}: {e}")
-        raise
-    finally:
-        conn.close()
+    logger.warning(
+        "sincronizar_bim: persistência SQLite removida. "
+        "Reimplementar com PostgreSQL na Sprint 1. fundacao_id=%s",
+        fundacao_id,
+    )
+    raise NotImplementedError(
+        "BIM sync requer persistência PostgreSQL (Sprint 1). "
+        f"fundacao_id={fundacao_id}"
+    )
