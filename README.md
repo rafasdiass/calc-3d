@@ -1,175 +1,104 @@
+# calc-3d
 
+> Plataforma SaaS de cálculo estrutural de fundações — API multi-tenant com FastAPI, Celery e PostgreSQL.
 
-```markdown
-# LCT Calculator
+---
 
-LCT Calculator é um projeto desenvolvido para calcular diferentes tipos de fundações, gerar relatórios e sincronizar os dados com uma plataforma BIM. Ele utiliza o banco de dados SQLite para armazenar informações sobre cálculos, relatórios e status de sincronização.
+## Visão geral
 
-## Funcionalidades
+**calc-3d** é uma API REST para dimensionamento de fundações (sapatas, estacas, radiers, blocos, tubulões, etc.) com suporte a:
 
-- **Cálculos de Fundações**: Calcule diferentes tipos de fundações, incluindo sapata, blocos, tubulões, etc.
-- **Relatórios Automáticos**: Gere relatórios com base nos cálculos de fundações.
-- **Sincronização com Plataforma BIM**: Sincronize os dados calculados com plataformas BIM para manter as informações atualizadas.
-- **Armazenamento Persistente com SQLite**: Armazene dados de cálculos e relatórios localmente utilizando SQLite.
+- Multi-tenancy via JWT (`tenant_id` claim)
+- Cálculos assíncronos via Celery + Redis
+- Persistência em PostgreSQL (asyncpg + SQLAlchemy 2.x)
+- Exportação de relatórios (PDF, JSON, CSV) — Sprint 2
+- Integração TQS/IFC — Sprint 2
 
-## Estrutura do Projeto
+---
 
-Abaixo está a estrutura do projeto com seus principais diretórios e arquivos:
+## Stack
+
+| Camada | Tecnologia |
+|---|---|
+| API | FastAPI 0.111 + Uvicorn |
+| Schemas | Pydantic v2 |
+| Auth | JWT (python-jose) + Argon2 (passlib) |
+| Worker | Celery 5 + Redis |
+| DB | PostgreSQL 16 + asyncpg + SQLAlchemy 2 |
+| Migrations | Alembic |
+| Testes | pytest + pytest-asyncio + httpx |
+| Linting | Ruff + Mypy (strict) |
+
+---
+
+## Estrutura
 
 ```
-lct_calculator/
-│
-├── src/
-│   └── lct_calculator/
-│       ├── __init__.py
-│       ├── main.py
-│       ├── database.py
-│       ├── calculators/
-│       │   ├── __init__.py
-│       │   └── simple_interest_calculator.py
-│       ├── helpers/
-│       │   ├── __init__.py
-│       │   └── calculation_helpers.py
-│       ├── interfaces/
-│       │   ├── __init__.py
-│       │   └── tqs_integration.py
-│       ├── services/
-│       │   ├── __init__.py
-│       │   ├── sqlite_service.py
-│       │   └── bim_integration.py
-│
+calc-3d/
+├── apps/
+│   ├── api/          ← FastAPI app (routers, schemas, middleware)
+│   └── worker/       ← Celery tasks
+├── core/
+│   ├── domain/       ← entidades de domínio (Sprint 1)
+│   ├── fem/          ← módulo FEM (Sprint 2)
+│   ├── design/       ← verificações NBR (Sprint 2)
+│   ├── geo/          ← geometria 3D (Sprint 2)
+│   └── utils/        ← utilitários compartilhados
+├── infra/
+│   ├── db/           ← sessão async SQLAlchemy
+│   ├── cache/        ← cliente Redis
+│   └── storage/      ← cliente S3-compatible
 ├── tests/
-│   ├── __init__.py
-│   └── test_lct_calculator.py
-│
-├── venv/
-│   └── ... (ambiente virtual)
-│
-├── README.md
-├── setup.py
-├── requirements.txt
-└── .gitignore
+│   ├── unit/
+│   └── integration/
+└── _legacy/          ← código legado preservado (referência para Sprint 1)
 ```
 
-## Instalação
+---
 
-Siga as instruções abaixo para configurar e rodar o projeto:
-
-### 1. Clonando o Repositório
+## Quickstart
 
 ```bash
-git clone https://github.com/seuusuario/lct_calculator.git
-cd lct_calculator
+# 1. Instalar dependências
+pip install -e ".[dev]"
+
+# 2. Configurar variáveis de ambiente
+cp .env.example .env
+# editar .env com DATABASE_URL, SECRET_KEY, REDIS_URL
+
+# 3. Rodar API
+uvicorn apps.api.main:app --reload --port 8000
+
+# 4. Rodar worker Celery
+celery -A apps.worker.tasks.celery_app worker --loglevel=info
+
+# 5. Rodar testes
+pytest --cov=apps --cov=core --cov-report=term-missing
 ```
 
-### 2. Criando e Ativando o Ambiente Virtual
+---
 
-Crie e ative um ambiente virtual para isolar as dependências do projeto:
+## Endpoints Sprint 0
 
-#### No MacOS/Linux:
+| Método | Path | Auth | Descrição |
+|---|---|---|---|
+| GET | `/api/health` | ❌ | Health check |
+| POST | `/api/auth/register` | ❌ | Registrar usuário |
+| POST | `/api/auth/token` | ❌ | Obter JWT |
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+Documentação interativa: `http://localhost:8000/api/docs`
 
-#### No Windows:
+---
 
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
+## Roadmap
 
-### 3. Instalando Dependências
+- **Sprint 0** ✅ — Scaffolding, FastAPI, auth stubs, CI/CD base
+- **Sprint 1** — Domínio fundações, PostgreSQL, auth real, CRUD projetos
+- **Sprint 2** — Cálculos NBR, FEM, exportação, integração TQS/IFC
+- **Sprint 3** — Visualização 3D, dashboard, multi-tenant billing
 
-Com o ambiente virtual ativado, instale todas as dependências necessárias:
+---
 
-```bash
-pip install -r requirements.txt
-```
+## Legado
 
-### 4. Inicializando o Banco de Dados
-
-Antes de rodar o projeto, é necessário inicializar o banco de dados SQLite. Execute o script abaixo para criar as tabelas no banco de dados:
-
-```bash
-python src/lct_calculator/services/sqlite_service.py
-```
-
-Isso criará o arquivo `lct_calculator.db` com as seguintes tabelas:
-
-- **fundacoes**: Armazena dados sobre as fundações calculadas.
-- **relatorios**: Armazena relatórios gerados com base nas fundações calculadas.
-- **sincronizacao_bim**: Armazena o status da sincronização dos dados com a plataforma BIM.
-
-### 5. Rodando o Programa Principal
-
-Após a instalação e configuração, você pode rodar o programa principal:
-
-```bash
-python src/lct_calculator/main.py
-```
-
-### 6. Gerando Relatórios
-
-Você pode gerar relatórios automaticamente após realizar os cálculos de fundações. Esses relatórios serão armazenados na tabela `relatorios` do banco de dados.
-
-### 7. Sincronizando com Plataforma BIM
-
-Para sincronizar os dados calculados com uma plataforma BIM, execute o seguinte script:
-
-```bash
-python src/lct_calculator/services/bim_integration.py
-```
-
-Isso atualizará o status da sincronização na tabela `sincronizacao_bim`.
-
-## Testes
-
-Testes automatizados estão disponíveis no projeto. Para rodar os testes, use o comando:
-
-```bash
-python -m unittest discover -s tests
-```
-
-## Como Funciona
-
-### Banco de Dados
-
-O banco de dados SQLite é utilizado para armazenar as fundações calculadas, relatórios gerados e o status de sincronização com a plataforma BIM. Os dados persistentes permitem que os cálculos e os relatórios sejam acessados em execuções subsequentes.
-
-### Integração com Plataforma BIM
-
-A sincronização com uma plataforma BIM é simulada pelo arquivo `bim_integration.py`. Ele atualiza o status de sincronização dos dados de fundações, permitindo manter os dados do projeto sincronizados com o BIM.
-
-### Cálculos de Fundações
-
-Os cálculos de fundações são realizados utilizando o módulo `calculators`, onde diferentes tipos de fundações podem ser implementados.
-
-## Dependências
-
-O projeto utiliza as seguintes bibliotecas:
-
-- **SQLite**: Para armazenamento local de dados.
-- **Python 3.x**: Versão mínima recomendada 3.7.
-- **Pyside2**: Para a criação da interface gráfica.
-
-Todas as dependências necessárias estão listadas no arquivo `requirements.txt`.
-
-## Criador
-
-Este projeto foi criado e desenvolvido por **Rafael Dias**.
-
-## Licença
-
-Este projeto é licenciado sob a [MIT License](LICENSE).
-
-```
-
-### Como Rodar o Programa com Interface
-Para rodar o programa com a interface gráfica que você criou (usando `PySide2`), o arquivo principal (`main.py`) deve ter a lógica para iniciar a interface gráfica. No `README.md`, já foi incluída a explicação para rodar o programa com o comando:
-
-```bash
-python src/lct_calculator/main.py
-```
-
+O diretório `_legacy/` contém o código original (Python puro, PyQt6) preservado como referência para migração das lógicas de cálculo para `core/`.
