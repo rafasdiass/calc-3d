@@ -1,78 +1,26 @@
 """
-FastAPI dependency injection — auth, db session, tenant.
+FastAPI dependency injectors.
 
-Sprint 0: stubs prontos para wiring real na Sprint 1.
+Sprint 0: stubs only.
+Sprint 1+: db session, current_user, tenant_id are fully wired.
 """
+
 from __future__ import annotations
 
-from typing import Annotated, Generator
+from typing import AsyncGenerator
 
-from fastapi import Depends, HTTPException, Request, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-
-# ---------------------------------------------------------------------------
-# Auth
-# ---------------------------------------------------------------------------
-
-_bearer_scheme = HTTPBearer(auto_error=False)
-
-
-def get_current_token(
-    credentials: Annotated[
-        HTTPAuthorizationCredentials | None,
-        Depends(_bearer_scheme),
-    ],
-) -> str:
-    """Extrai o raw JWT do header Authorization: Bearer <token>.
-
-    Levanta 401 se ausente.
-    """
-    if credentials is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authorization header ausente.",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return credentials.credentials
+# ─── DB session (stub — wired in Sprint 1 after Alembic models exist) ─────────
+# from sqlalchemy.ext.asyncio import AsyncSession
+# from apps.api.db import async_session_factory
+#
+# async def get_db() -> AsyncGenerator[AsyncSession, None]:
+#     async with async_session_factory() as session:
+#         yield session
 
 
-# ---------------------------------------------------------------------------
-# Tenant
-# ---------------------------------------------------------------------------
+# ─── Auth + tenant (stub — wired in Sprint 1 after FastAPI Users setup) ───────
+# async def get_current_user(...) -> User: ...
+# async def get_tenant_id(user: User = Depends(get_current_user)) -> UUID: ...
 
 
-def get_tenant_id(request: Request) -> str:
-    """Retorna tenant_id injetado pelo TenantMiddleware.
-
-    Levanta 400 se o middleware não populou — não deve ocorrer em produção.
-    """
-    tenant_id: str | None = getattr(request.state, "tenant_id", None)
-    if tenant_id is None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Tenant não identificado na requisição.",
-        )
-    return tenant_id
-
-
-# ---------------------------------------------------------------------------
-# DB session (stub — Sprint 1 conecta SQLAlchemy/asyncpg)
-# ---------------------------------------------------------------------------
-
-
-def get_db() -> Generator[None, None, None]:
-    """Placeholder para a sessão async de banco de dados.
-
-    Sprint 1: substituir por AsyncSession do SQLAlchemy.
-    """
-    # TODO: yield AsyncSession(engine)
-    yield None  # type: ignore[misc]
-
-
-# ---------------------------------------------------------------------------
-# Type aliases convenientes para injeção nos routers
-# ---------------------------------------------------------------------------
-
-CurrentToken = Annotated[str, Depends(get_current_token)]
-TenantId = Annotated[str, Depends(get_tenant_id)]
-DbSession = Annotated[None, Depends(get_db)]  # Sprint 1: trocar None por AsyncSession
+__all__: list[str] = []

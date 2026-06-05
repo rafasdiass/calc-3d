@@ -1,9 +1,16 @@
-"""
-_legacy/calculators — classes de cálculo de fundações (Python puro).
+from .sapata import Sapata
+from .bloco import Bloco
+from .tubulão import Tubulao  # Classe está sem acento no arquivo
+from .estaca import Estaca
+from .radier import Radier
+from .barrete import Barrete
+from .sapata_corrida import SapataCorrida
+from .estaca_helice_continua import EstacaHeliceContinua
+from .tubulão_ceu_aberto import TubulaoCeuAberto
+from .tubulão_ar_comprimido import TubulaoArComprimido
 
-Preservadas para migração para core/domain/ na Sprint 1.
-Nomes de arquivo normalizados (sem acentos):
-  tubulao.py             ← era tubulão.py
-  tubulao_ar_comprimido  ← era tubulão_ar_comprimido.py
-  tubulao_ceu_aberto     ← era tubulão_ceu_aberto.py
-"""
+__all__ = [
+    'Sapata', 'Bloco', 'Tubulao', 'Estaca', 'Radier',
+    'Barrete', 'SapataCorrida', 'EstacaHeliceContinua',
+    'TubulaoCeuAberto', 'TubulaoArComprimido'
+]
