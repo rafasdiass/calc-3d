@@ -1,0 +1,25 @@
+schemaVersion: 1
+tenant: rafael
+project: calc-3d
+displayName: Calc 3D
+repositories:
+  - id: calc-3d
+    path: .
+    writeMode: branch_worktree
+    purpose: main_repository
+packs:
+  - product
+  - engineering
+  - cognitive-design
+policies:
+  writeMode: branch_worktree
+  requirePacks: []
+  requireStateMigrationSecurityBeforePersistence: false
+runtime:
+  mode: remote
+  controlPlane: neon_free
+  externalInfra: enabled
+  artifactStore: github
+  bedrock:
+    defaultMode: require_explicit_budget
+    ledgerRequired: false
