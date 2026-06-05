@@ -1,18 +1,25 @@
 # macOS
 .DS_Store
 **/.DS_Store
+.AppleDouble
+.LSOverride
 
 # IDE
 .idea/
 .vscode/
+*.swp
+*.swo
 
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+*.egg
+.eggs/
 
 # venv
 venv/
@@ -27,20 +34,20 @@ env/
 # build
 dist/
 build/
-*.egg-info/
-*.egg
 
-# pytest / coverage
+# Pytest / coverage
+.pytest_cache/
 .coverage
 htmlcov/
 coverage.xml
+*.cover
 
-# Docker volumes locais
-postgres_data/
+# mypy
+.mypy_cache/
+.dmypy.json
 
-# SQLite legado (não deve existir mais, mas por via das dúvidas)
-*.db
-*.sqlite3
+# ruff
+.ruff_cache/
 
 # private (notas pessoais não-versionadas)
 docs/private/
